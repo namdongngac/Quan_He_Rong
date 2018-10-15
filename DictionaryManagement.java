@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dictionary;
+package dictionary2;
 
 import java.util.*;
 //import java.io.BufferedReader;
@@ -69,9 +69,9 @@ public class DictionaryManagement {
         public void insertFromFile(Dictionary Dic){
             // tao doi tuong lien ket nguon du lien
             Word[] words = new Word[200000];
-            
+            String[] str = new String[200000];
             TreeMap tm = new TreeMap();
-            File f = new File("dictionaries.dat");
+            File f = new File("dictionaries.txt");
             try(Scanner sc=new Scanner(f)) {                
                 // doc du lieu va luu vào mang
                 String line;
@@ -81,14 +81,15 @@ public class DictionaryManagement {
                     String temp[] = line.split("\t");
                     String wordtarget = temp[0];
                     String wordexplain = temp[1];
+                    str[i] = wordtarget;
                     words[i] = new Word(wordtarget,wordexplain);
-                    
                     tm.put(wordtarget, wordexplain);
                     i++;
                 }
                 Dic.setN(i);
                 Dic.Dictionary(words);
                 Dic.Dictionnary(tm);
+                Dic.Dictionnary(str);
             } 
             catch (IOException ex) {
                 System.out.println("Read file ERROR : "+ex);
@@ -146,7 +147,7 @@ public class DictionaryManagement {
                 
                 try {     
                                 
-                    fw.write(map.getKey()+"\r\n");                    
+                    fw.write(map.getKey()+"\t"+map.getValue()+"\r\n");                    
                    }            
                 catch (IOException ex) {
                     System.out.println("Write File ERROR : " + ex);

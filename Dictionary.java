@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dictionary;
+package dictionary2;
 import java.util.*;
 /**
  *
@@ -27,7 +27,7 @@ public class Dictionary {
         public void Dictionnary(TreeMap tm){
             this.tm = tm;
         }
-        public void Dictionary(String[] str){
+        public void Dictionnary(String[] str){
             this.str = str;
         }
 }
