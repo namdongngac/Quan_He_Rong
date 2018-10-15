@@ -1,165 +1,172 @@
-package com.ver3;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dictionary;
 
+import java.util.*;
+//import java.io.BufferedReader;
+//import java.io.BufferedWriter;
 import java.io.File;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+//import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import java.util.Scanner;
-import java.util.TreeMap;
-
-import com.ver2.Dictionary;
-import com.ver2.DictionaryCommandline;
-
-public class DictionaryManagement extends DictionaryCommandLine{
-	//Hàm lấy dữ liệu từ file vào Treemap
-	public void insertFromFileMap(TreeMap<String, String> mapWord)throws IOException{
-		File file = new File("dictionaries.dat ");
-		int i = 0;
-		if(!file.exists())
-		{
-			file.createNewFile();
-		}
-		FileInputStream fileInputStream = new FileInputStream(file);
-		
-		Scanner dictionaries = new Scanner(fileInputStream);
-		String line = new String();
-		while(dictionaries.hasNextLine()) {
-			line = dictionaries.nextLine();
-			if(line.trim()!="") {
-				String[] temp = line.split("\t");
-				String Target = temp[0];
-				String Explain = temp[1];
-				mapWord.put(Target, Explain);
-				
-			}
-		}
-		
-	}
-	public void addWord(TreeMap<String, String> mapWord) {//Thêm từ
-		System.out.println("Nhập từ bạn muốn thêm\n");
+/**
+ *
+ * @author admin
+ */
+public class DictionaryManagement {
+	public void insertFromCommandline(Dictionary Dic){
 		Scanner scan = new Scanner(System.in);
-		String s_Target = scan.nextLine();
-		System.out.println("Nhập nghĩa của từ bạn muốn thêm \n");
-		String s_Explain = scan.nextLine();
-		mapWord.put(s_Target, s_Explain);
-	}
-	public void deleteWord(TreeMap<String, String> mapWord,String key) {//Xóa từ
-		mapWord.remove(key);
-	}
-	//VCL
-	public void repairWord(TreeMap<String, String> mapWord,String wordRepair,String s_Target,String s_Explain) {
-		mapWord.put(s_Target, s_Explain);
-		deleteWord(mapWord, wordRepair);
-		
-	}
-	//Xuất dữ liệu từ điển ra file mới"dictionariesWrite.dat"
-	public void dictionaryExportToFile(TreeMap<String, String> mapWord)  {
-		File file = new File("dictionariesWrite.dat");
-		
+		System.out.print("Moi ban nhap so tu : ");
+		int n = scan.nextInt();
+		Dic.setN(n); 
+                TreeMap tm = new TreeMap();
+		Word[] words = new Word[n];		
+		for(int i = 0;i<words.length;i++) {
+			String wordtarget = scan.nextLine();
 			
-			try(PrintWriter pw = new PrintWriter(file)) {
-				
-				mapWord.forEach((key,vaulue)->pw.write(key+"\t"+vaulue+"\r\n"));
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				
-			}
-					
-	}
-	//Cập nhật từ điển sau khi thao tác 
-	public void update(TreeMap<String, String> mapWord,Dictionary Dic) throws IOException {
-		File file = new File("dictionaries.dat");	
-		//Map->file
-		try(PrintWriter pw = new PrintWriter(file)) {		
-			mapWord.forEach((key,vaulue)->pw.write(key+"\t"+vaulue+"\r\n"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block	
-		}
-		
-		com.ver2.DictionaryManagement Dm = new com.ver2.DictionaryManagement();
-		Dm.insertFromFile(Dic);//File -> mảng
-	}
-	public void dictionarySearcher(Dictionary Dic) {//Hàm tìm kiếm từ
-		
-		Scanner scan = new Scanner(System.in);
-		System.out.println("nhập từ bạn muốn tra ");
-		String s = scan.nextLine();
-		int j =0;
-		System.out.println("No   | English\t\t| Vietnamese");
-		for(int i=0;i<Dic.getN();i++) {
-			String prefix = Dic.words[i].getWordTarget();
-			if(prefix.startsWith(s)) {
-				System.out.println((j+1) +"    " + "| "+ Dic.words[i].getWordTarget()+"\t\t| "+Dic.words[i].getWordExplain());
-				j++;
-			}
-		}
-		if(j==0) System.out.println("Từ này chưa có trong từ điển");
-	}
-	//Hệ thông thao tác trên từ điển
-	public void ShowMenu(TreeMap<String, String> mapWord,Dictionary Dic) throws IOException {
-		System.out.println("1.Thêm từ");
-		System.out.println("2.Xóa từ");
-		System.out.println("3.Xuất toàn bộ dữ liệu từ điển");
-		System.out.println("4.Tìm kiếm từ");
-		System.out.println("5.Sửa từ");
-		System.out.println("6.Xuất dữ liệu từ điển ra file");
-		System.out.println("7.Thoát chương trình");
-		Scanner scan = new Scanner(System.in);
-		String key  = new String();
-		boolean end = false;
-		while(!end){
-			key = scan.nextLine();
+			String wordexplain = scan.nextLine();
 			
-			switch (key) {
-			case "1"://Thêm từ
-				addWord(mapWord);
-				System.out.println("Từ đã được thêm thành công");
-				update(mapWord, Dic);
-				break;
-			case "2"://Xóa từ		
-				System.out.println("Nhập từ bạn muốn xóa");
-				Scanner s = new Scanner(System.in);
-				String wordDelete = s.nextLine();
-				deleteWord(mapWord,wordDelete);
-				update(mapWord, Dic);
-				System.out.println("Xóa từ thành công");
-				break;
-			case "3"://Xuất toàn bộ dữ liệu từ điển	
-				DictionaryCommandline Dc = new DictionaryCommandline();
-				Dc.showAllWords(Dic);
-				break;
-			case "4"://Tìm kiếm từ
-				dictionarySearcher(Dic);
-				break;
-			case "5"://Sửa từ
-				Scanner s1 = new Scanner(System.in);
-				System.out.println("nhập từ bạn muốn sửa ");
-				String wordRepair = s1.nextLine();
-				System.out.println("Nhập từ bạn muốn sửa thành ");
-				String s_Target = s1.nextLine();
-				System.out.println("Nhập nghĩa mới của từ ");
-				String s_Explain = s1.nextLine();
-				repairWord(mapWord,wordRepair ,s_Target, s_Explain);
-				update(mapWord, Dic);
-				System.out.println("Từ đã được sửa thành công");
-				break;
-			case "6"://Xuất dữ liệu từ điển ra file
-				dictionaryExportToFile(mapWord);
-				System.out.println("Xuất thành công dữ liệu. Bạn có thể mở file dictionariesWrite.dat để xem dữ liệu");
-				break;
-			case "7": 
-				end = true;				
-				System.out.println("Thoát chương trình thành công");
-				break;
-			default:
-				System.out.println("nhập sai mời nhập lại\n");
-				break;
-			}
+			words[i] = new Word(wordtarget,wordexplain);
 		}
+		Dic.Dictionary(words);
 		
 	}
-
+        /*public void insertFromFile(Dictionary Dic){
+            Word[] words = new Word[100000];
+            TreeMap tm = new TreeMap();
+            try {                
+                // tao doi tuong luong va lien ket nguon du lieu
+                File f = new File("dictionaries.dat");
+                BufferedReader br;
+                // doc du lieu
+                FileReader fr = new FileReader(f);
+                br = new BufferedReader(fr);
+                String line;
+                int i=0;
+                while ((line = br.readLine()) != null){
+                    
+                    String[] temp = line.split("\t");
+                    String wordtarget = temp[0].trim();
+                    String wordexplain = temp[1].trim();
+                    words[i] = new Word(wordtarget,wordexplain);
+                    tm.put(wordtarget, wordexplain);
+                    i++;
+                }
+                Dic.setN(i);
+                Dic.Dictionary(words);
+                Dic.Dictionnary(tm);
+                // dong luong
+                fr.close();
+                br.close(); 
+                } 
+            catch (IOException ex) {
+                System.out.println("Lỗi đọc file : "+ex);
+            }
+        }*/
+        public void insertFromFile(Dictionary Dic){
+            // tao doi tuong lien ket nguon du lien
+            Word[] words = new Word[200000];
+            
+            TreeMap tm = new TreeMap();
+            File f = new File("dictionaries.dat");
+            try(Scanner sc=new Scanner(f)) {                
+                // doc du lieu va luu vào mang
+                String line;
+                int i=0;
+                while (sc.hasNext()){
+                    line = sc.nextLine() ;
+                    String temp[] = line.split("\t");
+                    String wordtarget = temp[0];
+                    String wordexplain = temp[1];
+                    words[i] = new Word(wordtarget,wordexplain);
+                    
+                    tm.put(wordtarget, wordexplain);
+                    i++;
+                }
+                Dic.setN(i);
+                Dic.Dictionary(words);
+                Dic.Dictionnary(tm);
+            } 
+            catch (IOException ex) {
+                System.out.println("Read file ERROR : "+ex);
+            }
+        }
+                
+        
+	public void dictionaryLookup(Dictionary Dic){
+            System.out.print("Nhap tu muon tim : ");
+            Scanner scan = new Scanner(System.in);
+            String w = scan.nextLine();             
+            /*for(int i=0;i<Dic.getN();i++){
+                if(Dic.words[i].getWordTarget().equals(w)){
+                    System.out.println("No    | English            | Vietnamese");
+                    System.out.println((i+1) +"     " + "| "+ Dic.words[i].getWordTarget()+"                | "+Dic.words[i].getWordExplain());
+                    break;
+                }
+            }*/
+            if(Dic.tm.get(w)!=null)
+                System.out.println(Dic.tm.get(w));  
+            else System.out.println("Tu khong ton tai trong tu dien");
+        }
+        public void dictionaryAdd(Dictionary Dic){
+            Scanner scan = new Scanner(System.in);
+            System.out.print("Nhap word_target : ");
+            String wordtarget = scan.nextLine();
+            System.out.print("Nhap word_explain : ");
+            String wordexplain = scan.nextLine();
+            if(Dic.tm.containsKey(wordtarget)){
+                System.out.println("Từ đã tồn tại");
+            }
+            else{
+                Dic.tm.put(wordtarget, wordexplain);
+                System.out.println("Them tu thanh cong");
+            }            
+	
+        }
+        public void dictionaryDelete(Dictionary Dic){
+            Scanner scan = new Scanner(System.in);
+            System.out.print("Nhap tu muon xoa : ");
+            String wordtarget = scan.nextLine();
+            if(Dic.tm.containsKey(wordtarget)){
+                Dic.tm.remove(wordtarget);
+                System.out.println("Xoa tu thanh cong");
+            }
+            else System.out.println("Tu khong ton tai");
+        }
+        public void dictionaryUpdate(Dictionary Dic)throws IOException{
+            Set set = Dic.tm.entrySet();
+            Iterator i = set.iterator();
+            File f = new File("dictionaries.txt");
+            FileWriter fw = new FileWriter(f);;
+            while(i.hasNext()){
+                Map.Entry map = (Map.Entry) i.next();
+                
+                try {     
+                                
+                    fw.write(map.getKey()+"\r\n");                    
+                   }            
+                catch (IOException ex) {
+                    System.out.println("Write File ERROR : " + ex);
+                }
+            }
+            
+        }
+        public void dictionarySearch(Dictionary Dic){
+            System.out.print("Nhap tu khoa muon tim : ");
+            Scanner scan = new Scanner(System.in);
+            String w = scan.nextLine();
+            int j=1;
+            System.out.println("No\t| English\t\t| Vietnamese");
+            for(int i=0;i<Dic.getN();i++){
+                String s = Dic.words[i].getWordTarget();
+                if(s.startsWith(w)){                   
+                    System.out.println(j +"\t" + "| "+ Dic.words[i].getWordTarget()+"\t\t| "+Dic.words[i].getWordExplain());
+                    j++;
+                }
+            }
+               
+        }
 }

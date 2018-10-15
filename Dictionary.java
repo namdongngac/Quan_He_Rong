@@ -12,6 +12,7 @@ import java.util.*;
 public class Dictionary {	
 	private int n;//Số lượng tự
 	public Word words[]; //= new Word[n];
+        public String str[];
         public TreeMap tm;
 	public int getN() {
 		return this.n;
@@ -25,5 +26,8 @@ public class Dictionary {
 	}
         public void Dictionnary(TreeMap tm){
             this.tm = tm;
+        }
+        public void Dictionary(String[] str){
+            this.str = str;
         }
 }
