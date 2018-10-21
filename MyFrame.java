@@ -6,7 +6,6 @@
 package dictionary2;
 
 
-import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.*;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -20,9 +19,9 @@ import javax.swing.*;
  */
 public class MyFrame extends javax.swing.JFrame {
     
-    //static Dictionary Dic = new Dictionary();
+    static Dictionary Dic = new Dictionary();
     static DictionaryManagement Dm = new DictionaryManagement();   
-    static Frame f =new Frame(); 
+    //static Frame f =new Frame(); 
     
     /**
      * Creates new form MyFrame
@@ -51,13 +50,13 @@ public class MyFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dictionary");
-        setBackground(new java.awt.Color(255, 0, 0));
+        setBackground(new java.awt.Color(0, 0, 0));
 
         inputWord.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 inputWordInputMethodTextChanged(evt);
-            }
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
         inputWord.addActionListener(new java.awt.event.ActionListener() {
@@ -77,14 +76,14 @@ public class MyFrame extends javax.swing.JFrame {
             }
         });
 
-        searchButton.setText("Tìm từ cho bố");
+        searchButton.setText("Tìm");
         searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchButtonActionPerformed(evt);
             }
         });
 
-        addButton.setText("Add cmn từ");
+        addButton.setText("Thêm từ");
         addButton.setToolTipText("Thêm từ vào từ điển");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,7 +91,7 @@ public class MyFrame extends javax.swing.JFrame {
             }
         });
 
-        deleteButton.setText("Xóa cmn từ");
+        deleteButton.setText("Xóa từ");
         deleteButton.setToolTipText("Xóa từ trong từ điển");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,7 +99,7 @@ public class MyFrame extends javax.swing.JFrame {
             }
         });
 
-        exitButton.setText("Bố mày thoát");
+        exitButton.setText("Thoát");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitButtonActionPerformed(evt);
@@ -120,6 +119,14 @@ public class MyFrame extends javax.swing.JFrame {
                 showDicMouseClicked(evt);
             }
         });
+        showDic.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                showDicKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                showDicKeyReleased(evt);
+            }
+        });
         showDic.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 showDicValueChanged(evt);
@@ -136,24 +143,15 @@ public class MyFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
                     .addComponent(inputWord))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(outputWord, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 16, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(exitButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(searchButton)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(outputWord, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                        .addComponent(searchButton))
+                    .addComponent(exitButton))
+                .addGap(0, 16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,15 +165,12 @@ public class MyFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(outputWord, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(104, 104, 104)
-                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
-                                .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(18, 18, 18)
+                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                        .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -187,7 +182,7 @@ public class MyFrame extends javax.swing.JFrame {
         if(!inputWord.getText().equals("")){
             outputWord.setText("");
             String a = inputWord.getText();
-            String b = (String)f.Dic.tm.get(a);
+            String b = (String)Dic.tm.get(a);
             if(b==null){
                 b = "";
                 JOptionPane.showMessageDialog(rootPane, "Từ chưa có trong từ điển");    
@@ -204,17 +199,17 @@ public class MyFrame extends javax.swing.JFrame {
         if(!inputWord.getText().equals("")){
             outputWord.setText("");
             String a = inputWord.getText();
-            String b = (String)f.Dic.tm.get(a);
+            String b = (String)Dic.tm.get(a);
             if(b==null){
                 b = "";
                 JOptionPane.showMessageDialog(rootPane, "Từ chưa có trong từ điển");
                   
             }              
             outputWord.setText(b+"\n");
-            outputWord.setText(f.Dic.words[showDic.getSelectedIndex()].getWordExplain());
+            //outputWord.setText(Dic.words[showDic.getSelectedIndex()].getWordExplain());
         }
         
-            else JOptionPane.showMessageDialog(rootPane, "Bạn chưa nhập từ");
+        else JOptionPane.showMessageDialog(rootPane, "Bạn chưa nhập từ");
             
     }//GEN-LAST:event_searchButtonActionPerformed
 
@@ -235,35 +230,38 @@ public class MyFrame extends javax.swing.JFrame {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         // TODO add your handling code here:
-        f.setVisible(true);
-        f.CreateAndShow();
-        try {
-            
-            Dm.update(f.Dic);           
-            showDic.setModel(Dm.model);
-            showDic.show(true);
-        } catch (IOException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Frame f = new Frame();
+        f.setVisible(true);           
+        
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here
-        //JOptionPane.showConfirmDialog(rootPane, "Bạn chắc muốn xóa từ này ?");
-        //if(rootPane.equals("Yes")){
-            String wordtarget = showDic.getSelectedValue();
-            if(f.Dic.tm.containsKey(wordtarget)){
-                f.Dic.tm.remove(wordtarget);
-                try {
+        if(showDic.isSelectionEmpty()){
+            JOptionPane.showMessageDialog(rootPane, "Bạn chưa chọn từ");
             
-                    Dm.update(f.Dic);           
-                    showDic.setModel(Dm.model);
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        }
+        else{
+            int click = JOptionPane.showConfirmDialog(rootPane, "Bạn chắc muốn xóa từ này ?");       
+        if(click == JOptionPane.YES_OPTION){
+            String wordtarget = showDic.getSelectedValue();
+            if(Dic.tm.containsKey(wordtarget)){
+                Dic.tm.remove(wordtarget);
+                Dm.model.removeElement(wordtarget);
             }
-         
+            try {
+                Dm.update(Dic);                
+                    
+            } catch (IOException ex) {
+                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);                   
+            }                             
+            
+            inputWord.setText("");
+            outputWord.setText("");
+            JOptionPane.showMessageDialog(rootPane, "Xóa từ thành công");
+        } 
+        }
+        
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void inputWordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputWordKeyTyped
@@ -277,16 +275,16 @@ public class MyFrame extends javax.swing.JFrame {
     private void inputWordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputWordKeyReleased
         // TODO add your handling code here:
         if(!evt.equals(VK_ENTER)){
-            String a = null;
-        //outputWord.setText("");
-        
-            //outputWord.setText("");
-            a = inputWord.getText();
-            for(int i=0;i<f.Dic.getN();i++){
-                String s = f.Dic.words[i].getWordTarget();
+            String a = inputWord.getText();
+            for(int i=0;i<Dic.getN();i++){
+                String s = Dic.words[i].getWordTarget();
                 
                 if(s.startsWith(a)){   
-                    showDic.setSelectedIndex(i);
+                    showDic.setSelectedIndex(i);                   
+                    if(showDic.getSelectedIndex()<Dic.getN()-24)
+                        showDic.ensureIndexIsVisible(showDic.getSelectedIndex()+24);
+                    else
+                        showDic.ensureIndexIsVisible(Dic.getN()-1);
                     break;                                    
                 }
                 
@@ -298,13 +296,31 @@ public class MyFrame extends javax.swing.JFrame {
 
     private void showDicMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showDicMouseClicked
         // TODO add your handling code here:
-        
-        inputWord.setText(f.Dic.words[showDic.getSelectedIndex()].getWordTarget());
-        
+        String a = Dic.words[showDic.getSelectedIndex()].getWordTarget();
+        inputWord.setText(a);
+        outputWord.setText(Dic.tm.get(a)+"\n");
     }//GEN-LAST:event_showDicMouseClicked
+
+    private void showDicKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_showDicKeyReleased
+        // TODO add your handling code here:
+        String a = Dic.words[showDic.getSelectedIndex()].getWordTarget();
+        inputWord.setText(a);
+        outputWord.setText(Dic.tm.get(a)+"\n");
+    }//GEN-LAST:event_showDicKeyReleased
+
+    private void showDicKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_showDicKeyPressed
+        // TODO add your handling code here:
+        //if(evt.equals(VK_UP)){
+            //showDic.setSelectedIndex(showDic.getSelectedIndex()-1);
+        //}
+        //if(evt.equals(VK_DOWN)){
+            //showDic.setSelectedIndex(showDic.getSelectedIndex()+1);
+        //}
+    }//GEN-LAST:event_showDicKeyPressed
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
     public static void main(String args[]) throws IOException {
         /* Set the Nimbus look and feel */
@@ -331,12 +347,11 @@ public class MyFrame extends javax.swing.JFrame {
         //</editor-fold>
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Dm.insertFromFile(f.Dic);
-                new MyFrame().setVisible(true);
-                
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            Dm.insertFromFile(Dic);
+            MyFrame mf = new MyFrame();
+            mf.setLocationRelativeTo(null);
+            mf.setVisible(true);
         });
        
         		
